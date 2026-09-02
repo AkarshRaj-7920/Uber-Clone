@@ -1,26 +1,19 @@
 import '@fontsource/poppins'
-import React, { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect } from 'react'
+import Lenis from 'lenis'
 import UberLogo from '../assets/imgs/UberLogo.svg'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { FaCarAlt, FaBox, FaRegUser } from 'react-icons/fa'
 import { MdCarCrash } from 'react-icons/md'
 import { IoIosArrowDown, IoMdMore } from 'react-icons/io'
-import UberMobileTrip from "../assets/imgs/UberMobileTrip.png";
-import UberMobileParcel from "../assets/imgs/UberMobileParcel.png";
-import UberMobileRentals from "../assets/imgs/UberMobileRentals.png";
+
 
 const Home = () => {
   const location = useLocation();
   const isCaptain = location.pathname.startsWith('/home/captain-home')
   const [ProfileMenu, setProfileMenu] = useState(false)
-  const [selectedService, setSelectedService] = useState('trip');
   const menuRef = useRef(null)
-
-  const services = [
-    { id: 'trip', label: 'Trip', image: UberMobileTrip, badge: 'Popular' },
-    { id: 'parcel', label: 'Parcel', image: UberMobileParcel, badge: null },
-    { id: 'rentals', label: 'Rentals', image: UberMobileRentals, badge: null },
-  ];
+  const mainRef = useRef(null);
 
   useEffect(() => {
     const handleOutside = (e) => {
@@ -30,9 +23,33 @@ const Home = () => {
     return () => document.removeEventListener('mousedown', handleOutside)
   }, [])
 
+  // Scroll Trigger UseEffect
+  useEffect(() => {
+    if (!mainRef.current) return;
+
+    const lenis = new Lenis({
+      wrapper: mainRef.current,
+      content: mainRef.current,
+      smoothWheel: true,
+      duration: 1,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+    };
+  }, []);
+  
+
 
   return (
-    <main className='min-h-screen overflow-y-auto' style={{ fontFamily: "Poppins, sans-serif" }}>
+    <main className='min-h-screen' style={{ fontFamily: "Poppins, sans-serif" }}>
       {/* Header */}
       <div className='w-full h-[10vh] px-4 md:px-15 py-1 mb-1 flex items-center justify-between cursor-default relative z-30'>
         {/* Navbar */}
@@ -120,7 +137,9 @@ const Home = () => {
         </div>
       </div>
 
-      <main className={`h-[89vh] bg-white text-slate-900 flex flex-col ${isCaptain ? 'md:flex-row-reverse gap-2 md:gap-4 md:justify-center' : 'md:flex-row justify-center gap-4'} relative`}>
+      <main
+        ref={mainRef}
+        className={`h-[89vh] overflow-y-auto scrollbar-none bg-white text-slate-900 flex flex-col ${isCaptain ? 'md:flex-row-reverse gap-2 md:gap-4 md:justify-center' : 'md:flex-row gap-2 md:gap-4 md:justify-center'} relative`}>
         <Outlet />
       </main>
     </main >

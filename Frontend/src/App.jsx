@@ -11,12 +11,12 @@ import CaptainRegister from './components/Auth/Captain/CaptainRegister'
 import Home from './pages/Home'
 import UserProtectWrapper from './components/Others/UserProtectWrapper'
 import UserLogout from './components/Auth/User/UserLogout'
-import UserHome from './components/Home/UserHome'
-import CaptainHome from './components/Home/CaptainHome'
+import CaptainHome from './components/Home/CaptainHomeComponents/CaptainHome'
 import CaptainProtectWrapper from './components/Others/CaptainProtectWrapper'
 import CaptainLogout from './components/Auth/Captain/CaptainLogout'
-import CaptainRiding from './components/Auth/Captain/CaptainRiding'
 import Riding from './pages/Riding'
+import CaptainRiding from './components/Riding/Captain/CaptainRiding'
+import UserHome from './components/Home/UserHomeComponents/UserHome'
 
 const App = () => {
   return (
@@ -62,7 +62,11 @@ const App = () => {
         </Route>
 
         <Route path='/riding' element={<Riding />}>
-          <Route path='captain' element={<CaptainRiding />} />
+          <Route path='captain' element={
+            <CaptainProtectWrapper>
+              <CaptainRiding />
+            </CaptainProtectWrapper>
+          } />
         </Route>
       </Routes>
     </div>

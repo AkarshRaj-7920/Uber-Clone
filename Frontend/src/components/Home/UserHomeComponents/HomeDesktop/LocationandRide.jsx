@@ -56,7 +56,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
         <div className='flex flex-col overflow-hidden rounded-[28px] border border-slate-200/80 bg-white/90 shadow-[0_20px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl'>
             <div className='border-b border-slate-200/80 bg-white px-5 py-3'>
                 <div className='leading-tight whitespace-nowrap'>
-                    <h1 className='text-xl font-bold tracking-tight sm:text-2xl'>Find a trip</h1>
+                    <h1 className='text-lg font-bold tracking-tight md:text-xl'>Find a trip</h1>
                     <p className='text-xs font-medium text-slate-800'>Choose your pickup and drop-off points</p>
                 </div>
             </div>
@@ -69,7 +69,8 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                 {!selectVehicle ? (
                     <>
                         {/* Input Locaiton */}
-                        <div className='relative flex flex-col gap-3'>
+                        <div
+                            className='relative flex flex-col gap-3'>
                             <div className='absolute left-4.5 z-10 top-6 bottom-6 w-0.5 rounded-full bg-slate-800/70' />
 
                             <div className='group relative w-full'>
@@ -90,7 +91,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                     autoComplete='off'
                                     name='pickuplocation'
                                     placeholder='Enter pickup location'
-                                    className='w-full rounded-2xl border border-transparent bg-slate-100 py-3.5 pl-10 pr-10 text-sm font-medium text-slate-800 shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:bg-slate-200/70 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10'
+                                    className='w-full rounded-2xl border border-transparent bg-slate-100 py-2.5 pl-10 pr-10 md:py-3.5 text-sm font-medium text-slate-800 shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:bg-slate-200/70 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10'
                                 />
                                 {Pickup ? (
                                     <button
@@ -104,7 +105,8 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                 ) : null}
                             </div>
 
-                            <div className='group relative w-full'>
+                            <div
+                                className='group relative w-full'>
                                 <div className='absolute left-3.5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-center text-slate-900'>
                                     <FaSquare size={9} />
                                 </div>
@@ -119,7 +121,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                     autoComplete='off'
                                     name='dropoflocation'
                                     placeholder='Where to?'
-                                    className='w-full rounded-2xl border border-transparent bg-slate-100 py-3.5 pl-10 pr-10 text-sm font-medium text-slate-800 shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:bg-slate-200/70 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10'
+                                    className='w-full rounded-2xl border border-transparent bg-slate-100 py-2.5 pl-10 pr-10 md:py-3.5 text-sm font-medium text-slate-800 shadow-sm transition-all duration-200 placeholder:text-slate-400 hover:bg-slate-200/70 focus:border-slate-900 focus:bg-white focus:outline-none focus:ring-2 focus:ring-slate-900/10'
                                 />
                                 {Dropoff ? (
                                     <button
