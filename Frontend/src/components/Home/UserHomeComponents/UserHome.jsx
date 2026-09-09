@@ -4,6 +4,7 @@ import UberMobileTrip from "../../../assets/imgs/UberMobileTrip.png"
 import LocationandRide from './HomeDesktop/LocationandRide'
 import ConfirmLocationandRide from './HomeDesktop/ConfirmLocationandRide'
 import { IoIosCall } from 'react-icons/io'
+import axios from 'axios'
 
 const UserHome = () => {
   const VEHICLES = [
@@ -45,6 +46,40 @@ const UserHome = () => {
   const [isRiding, setisRiding] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(VEHICLES[0]);
   const [DriverFound, setDriverFound] = useState(false);
+
+
+  const [Pickup, setPickup] = useState('')
+  const [Dropoff, setDropoff] = useState('')
+  const [selectVehicle, setselectVehicle] = useState(null)
+  const [showSuggestions, setshowSuggestions] = useState({
+    showSuggestions: false,
+    suggestedLocations: []
+  });
+  const [Fare, setFare] = useState(null)
+
+  async function getFare() {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/rides/get-fare`,
+        {
+          params: {
+            pickup: Pickup,
+            destination: Dropoff
+          },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      );
+
+      setFare(response.data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async function createRide(vehicleType) {
+    
+  }
 
   return (
     <>
@@ -130,7 +165,7 @@ const UserHome = () => {
       ) : (
         <section className='z-20 flex w-full shrink-0 flex-col px-2 transition-all duration-300 md:w-96 md:py-1 lg:w-105 xl:w-115 overflow-y-auto'>
           {!isRiding ? (
-            <LocationandRide selectedVehicle={selectedVehicle} setSelectedVehicle={setSelectedVehicle} VEHICLES={VEHICLES} isRiding={isRiding} setisRiding={setisRiding} />
+            <LocationandRide selectedVehicle={selectedVehicle} setSelectedVehicle={setSelectedVehicle} VEHICLES={VEHICLES} isRiding={isRiding} setisRiding={setisRiding} Pickup={Pickup} setPickup={setPickup} Dropoff={Dropoff} setDropoff={setDropoff} selectVehicle={selectVehicle} setselectVehicle={setselectVehicle} showSuggestions={showSuggestions} setshowSuggestions={setshowSuggestions} getFare={getFare} Fare={Fare} />
           ) : (
             <ConfirmLocationandRide isRiding={isRiding} setisRiding={setisRiding} selectedVehicle={selectedVehicle} setSelectedVehicle={setSelectedVehicle} VEHICLES={VEHICLES} />
           )}
@@ -139,11 +174,11 @@ const UserHome = () => {
 
       <section
         className='relative h-50 md:h-auto w-full px-2 md:w-3/7 md:px-1.5 md:py-1 mt-1 md:mt-0 lg:w-4/7 xl:w-3/5'>
-        <div className='h-full w-full overflow-hidden rounded-[15px] border border-slate-200/80 shadow-[0_20px_70px_rgba(15,23,42,0.12)]'>
+        <div className='h-full w-full overflow-hidden rounded-[15px]'>
           <img
             src='https://i.sstatic.net/gtiI7.gif'
             alt='Uber Live Navigation Map'
-            className='h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]'
+            className='h-full w-full object-cover'
           />
         </div>
       </section>

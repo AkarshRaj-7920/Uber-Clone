@@ -10,6 +10,7 @@ const connectToDb = require('./Database/Database')
 const userRoutes = require('./Routes/user.Routes')
 const captainRoutes = require('./Routes/captain.Routes')
 const mapRoutes = require('./Routes/map.Routes')
+const rideRoutes = require('./Routes/ride.routes')
 
 connectToDb()
 
@@ -29,5 +30,6 @@ app.get('/', (req, res, next) => {
 app.use('/users', userRoutes)
 app.use('/captains', captainRoutes)
 app.use('/maps', mapRoutes)
+app.use('/rides', rideRoutes)
 
 module.exports = app;

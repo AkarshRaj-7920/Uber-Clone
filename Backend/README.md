@@ -47,6 +47,167 @@ The request body must be sent as JSON and should include the following fields:
 
 ---
 
+## Get Coordinates Endpoint
+
+### /maps/get-coordinates
+
+Returns the geographic coordinates for an address.
+
+### HTTP Method
+
+GET
+
+### Authentication
+
+Include a valid JWT token in the request headers or cookies.
+
+### Query Parameters
+
+- `address` (required): string, minimum 3 characters
+
+### Example Request
+
+```text
+GET /maps/get-coordinates?address=New%20York
+```
+
+### Success Response
+- Status Code: `200 OK`
+- Description: Coordinates returned successfully
+
+### Validation Errors
+- Status Code: `400 Bad Request`
+- Description: Invalid or missing address
+
+### Address Not Found
+- Status Code: `404 Not Found`
+- Description: Coordinates could not be found for the provided address
+
+---
+
+## Get Distance and Time Endpoint
+
+### /maps/get-distance-time
+
+Returns the distance and estimated travel time between two locations.
+
+### HTTP Method
+
+GET
+
+### Authentication
+
+Include a valid JWT token in the request headers or cookies.
+
+### Query Parameters
+
+- `origin` (required): string, minimum 3 characters
+- `destination` (required): string, minimum 3 characters
+
+### Example Request
+
+```text
+GET /maps/get-distance-time?origin=New%20York&destination=Boston
+```
+
+### Success Response
+- Status Code: `200 OK`
+- Description: Distance and travel time returned successfully
+
+### Validation Errors
+- Status Code: `400 Bad Request`
+- Description: Invalid or missing origin or destination
+
+### Server Errors
+- Status Code: `500 Internal Server Error`
+- Description: Something went wrong while calculating distance and travel time
+
+---
+
+## Get Location Suggestions Endpoint
+
+### /maps/get-suggestions
+
+Returns autocomplete suggestions for a location search.
+
+### HTTP Method
+
+GET
+
+### Authentication
+
+Include a valid JWT token in the request headers or cookies.
+
+### Query Parameters
+
+- `input` (required): string, minimum 3 characters
+
+### Example Request
+
+```text
+GET /maps/get-suggestions?input=Central%20Park
+```
+
+### Success Response
+- Status Code: `200 OK`
+- Description: Location suggestions returned successfully
+
+### Validation Errors
+- Status Code: `400 Bad Request`
+- Description: Invalid or missing search input
+
+### Server Errors
+- Status Code: `500 Internal Server Error`
+- Description: Something went wrong while retrieving suggestions
+
+---
+
+## Create Ride Endpoint
+
+### /rides/create
+
+Creates a ride request for the authenticated user.
+
+### HTTP Method
+
+POST
+
+### Authentication
+
+Include a valid user JWT token in the request headers or cookies.
+
+### Request Body
+
+The request body must be sent as JSON and should include the following fields:
+
+- `pickup` (required): string, minimum 3 characters
+- `destination` (required): string, minimum 3 characters
+- `vehicleType` (required): string, one of `auto`, `car`, or `moto`
+
+### Example Request
+
+```json
+{
+  "pickup": "Times Square",
+  "destination": "Central Park",
+  "vehicleType": "car"
+}
+```
+
+### Success Response
+- Status Code: `201 Created`
+- Description: Ride created successfully
+
+### Validation Errors
+- Status Code: `400 Bad Request`
+- Description: Invalid or missing pickup, destination, or vehicle type
+
+### Server Errors
+- Status Code: `500 Internal Server Error`
+- Description: Something went wrong while creating the ride
+
+---
+
 ## User Login Endpoint
 
 ### /users/login

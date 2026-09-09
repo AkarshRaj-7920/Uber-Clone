@@ -1,7 +1,6 @@
-import React from 'react'
-import { MdDirectionsCar, MdTwoWheeler, MdLocalTaxi } from 'react-icons/md'
+import { MdDirectionsCar } from 'react-icons/md'
 
-const ConfirmLocationandRide = ({ isRiding, setisRiding, selectedVehicle, setSelectedVehicle, VEHICLES }) => {
+const ConfirmLocationandRide = ({ setisRiding, selectedVehicle }) => {
     return (
         <div className='bg-white border border-gray-200/90 shadow-xl shadow-slate-200/50 rounded-2xl p-5 flex flex-col gap-4 text-center'>
             <div className='relative w-16 h-16 mx-auto flex items-center justify-center'>

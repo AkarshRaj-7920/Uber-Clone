@@ -1,24 +1,55 @@
+import axios from 'axios'
 import { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft, FaChevronRight, FaCircle, FaClock, FaCreditCard, FaLocationArrow, FaSquare, FaUser } from 'react-icons/fa'
 import { IoIosAdd, IoIosArrowDown, IoMdClose, IoMdSearch } from 'react-icons/io'
 
-const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisRiding }) => {
-    // Dummy Datas
-    const SUGGESTED_LOCATIONS = [
-        { id: 1, name: "Gorakhpur - Spain", address: "Puvanchal, Gorakhpur, UP 10036" },
-        { id: 2, name: "Times Square", address: "Manhattan, New York, NY 10036" },
-        { id: 3, name: "JFK International Airport", address: "Queens, NY 11430" },
-        { id: 4, name: "Central Park West", address: "Central Park West, New York, NY" },
-        { id: 5, name: "Grand Central Terminal", address: "89 E 42nd St, New York, NY 10017" },
-        { id: 6, name: "Brooklyn Bridge Park", address: "334 Furman St, Brooklyn, NY 11201" }
-    ];
-
-    const [Pickup, setPickup] = useState('')
-    const [Dropoff, setDropoff] = useState('')
-    const [selectVehicle, setselectVehicle] = useState(false)
-    const [showSuggestions, setshowSuggestions] = useState(false)
+const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisRiding, Pickup, setPickup, Dropoff, setDropoff, selectVehicle, setselectVehicle, showSuggestions, setshowSuggestions, getFare, Fare }) => {
     const [activeInput, setactiveInput] = useState('')
     const searchContainerRef = useRef(null)
+
+    // HandlePickup Suggestions
+    const handlePickupChange = async (e) => {
+        setPickup(e.target.value)
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+                {
+                    params: { input: e.target.value },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+            setshowSuggestions(prev => ({
+                ...prev,
+                suggestedLocations: response.data,
+                showSuggestions: true
+            }))
+        } catch (err) {
+            // handel error
+            console.log(err);
+        }
+    }
+
+    // HandleDropoff Suggestions
+    const handleDropOffChange = async (e) => {
+        setDropoff(e.target.value)
+        try {
+            const response = await axios.get(`${import.meta.env.VITE_BASE_URL}/maps/get-suggestions`,
+                {
+                    params: { input: e.target.value },
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    }
+                })
+            setshowSuggestions(prev => ({
+                ...prev,
+                suggestedLocations: response.data,
+                showSuggestions: true
+            }))
+        } catch (err) {
+            // handel error
+            console.log(err);
+        }
+    }
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -26,7 +57,10 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                 searchContainerRef.current &&
                 !searchContainerRef.current.contains(event.target)
             ) {
-                setshowSuggestions(false)
+                setshowSuggestions(prev => ({
+                    ...prev,
+                    showSuggestions: false
+                }));
             }
         }
 
@@ -73,6 +107,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                             className='relative flex flex-col gap-3'>
                             <div className='absolute left-4.5 z-10 top-6 bottom-6 w-0.5 rounded-full bg-slate-800/70' />
 
+                            {/* Pickup */}
                             <div className='group relative w-full'>
                                 <div className='absolute left-3.5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-center text-slate-900'>
                                     <FaCircle size={9} />
@@ -80,10 +115,13 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                 <input
                                     type='text'
                                     value={Pickup}
-                                    onChange={(e) => setPickup(e.target.value)}
+                                    onChange={(e) => handlePickupChange(e)}
                                     onFocus={() => {
-                                        setshowSuggestions(true)
                                         setactiveInput('pickup')
+                                        setshowSuggestions(prev => ({
+                                            ...prev,
+                                            showSuggestions: true
+                                        }))
                                         if (!Pickup) {
                                             setPickup('Current Location')
                                         }
@@ -105,18 +143,21 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                 ) : null}
                             </div>
 
-                            <div
-                                className='group relative w-full'>
+                            {/* DropOff */}
+                            <div className='group relative w-full'>
                                 <div className='absolute left-3.5 top-1/2 z-20 flex -translate-y-1/2 items-center justify-center text-slate-900'>
                                     <FaSquare size={9} />
                                 </div>
                                 <input
                                     type='text'
                                     value={Dropoff}
-                                    onChange={(e) => setDropoff(e.target.value)}
+                                    onChange={(e) => handleDropOffChange(e)}
                                     onFocus={() => {
-                                        setshowSuggestions(true)
                                         setactiveInput('dropoff')
+                                        setshowSuggestions(prev => ({
+                                            ...prev, 
+                                            showSuggestions: true
+                                        }))
                                     }}
                                     autoComplete='off'
                                     name='dropoflocation'
@@ -145,44 +186,56 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                         </div>
 
                         {/* Show Suggestions */}
-                        {showSuggestions && (
+                        {showSuggestions.showSuggestions && (
                             <div className='relative flex flex-col gap-3' style={{ maxHeight: '13rem' }}>
                                 <div className='h-full overflow-y-auto scrollbar-thin rounded-2xl border border-slate-200 bg-white shadow-sm'>
                                     <div className='flex items-center justify-between px-4 pt-1'>
                                         <h4 className='text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-500'>Recent places</h4>
+
+                                        {/* Close Button */}
                                         <button
                                             type='button'
-                                            onClick={() => setshowSuggestions(false)}
-                                            className='rounded-full p-1 text-slate-600 transition-all hover:bg-slate-100 hover:text-slate-900'
-                                        >
+                                            onClick={() => setshowSuggestions(prev => ({
+                                                ...prev,
+                                                showSuggestions: false
+                                            }))}
+                                            className='rounded-full p-1 text-slate-600 transition-all hover:bg-slate-100 hover:text-slate-900'>
                                             <IoMdClose size={15} />
                                         </button>
                                     </div>
 
-                                    {SUGGESTED_LOCATIONS.map((loc) => (
+                                    {showSuggestions.suggestedLocations.map((loc) => (
                                         <button
-                                            key={loc.id}
-                                            type='button'
+                                            key={loc.PlaceId}
+                                            type="button"
                                             onClick={() => {
                                                 if (activeInput === 'pickup') {
-                                                    setPickup(loc.name)
+                                                    setPickup(loc.Address.Label);
                                                 } else {
-                                                    setDropoff(loc.name)
+                                                    setDropoff(loc.Address.Label);
                                                 }
-                                                setshowSuggestions(false)
+
+                                                setshowSuggestions(prev => ({
+                                                    ...prev,
+                                                    showSuggestions: false
+                                                }));
                                             }}
-                                            className='flex w-full items-center gap-3 border-t border-slate-100 px-4 py-3 text-left transition-colors hover:bg-slate-50'
-                                        >
-                                            <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700'>
+                                            className="flex w-full items-center gap-3 border-t border-slate-100 px-4 py-3 text-left transition-colors hover:bg-slate-50">
+                                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-700">
                                                 <FaLocationArrow size={12} />
                                             </div>
 
-                                            <div className='min-w-0 flex-1'>
-                                                <h3 className='truncate text-sm font-semibold text-slate-900'>{loc.name}</h3>
-                                                <p className='truncate text-xs text-slate-500'>{loc.address}</p>
+                                            <div className="min-w-0 flex-1">
+                                                <h3 className="truncate text-sm font-semibold text-slate-900">
+                                                    {loc.Title}
+                                                </h3>
+
+                                                <p className="truncate text-xs text-slate-500">
+                                                    {loc.Address?.Label}
+                                                </p>
                                             </div>
 
-                                            <FaChevronRight className='shrink-0 text-slate-400' />
+                                            <FaChevronRight className="shrink-0 text-slate-400" />
                                         </button>
                                     ))}
                                 </div>
@@ -212,7 +265,8 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
 
                         <button
                             type='button'
-                            onClick={() => {
+                            onClick={async () => {
+                                await getFare();
                                 setselectVehicle(true)
                             }}
                             className='mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-all duration-200 hover:bg-black active:scale-[0.99]'
@@ -267,7 +321,10 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                     <button
                                         key={vehicle.id}
                                         type='button'
-                                        onClick={() => setSelectedVehicle(vehicle)}
+                                        onClick={() => {
+                                            setSelectedVehicle(vehicle)
+                                            console.log(vehicle)
+                                        }}
                                         className={`w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-200 cursor-pointer text-left ${isSelected
                                             ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-slate-900/10'
                                             : 'bg-white hover:bg-slate-50 border-slate-200/80 text-slate-900 shadow-2xs'
@@ -304,7 +361,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
 
                                         <div className='text-right shrink-0'>
                                             <span className={`text-base font-extrabold block ${isSelected ? 'text-white' : 'text-slate-900'}`}>
-                                                {vehicle.price}
+                                                {Fare ? `₹${Fare[vehicle.id]}`: 'NAN'}
                                             </span>
                                         </div>
                                     </button>
@@ -329,10 +386,9 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
 
                             <button
                                 type='submit'
-                                className='w-full bg-slate-900 hover:bg-black active:scale-[0.99] text-white font-bold py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-sm sm:text-base'
-                            >
+                                className='w-full bg-slate-900 hover:bg-black active:scale-[0.99] text-white font-bold py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-sm sm:text-base'>
                                 <span>Confirm {selectedVehicle.name}</span>
-                                <span>• {selectedVehicle.price}</span>
+                                <span>• ₹{Fare?.[selectedVehicle.id]}</span>
                             </button>
                         </div>
                     </div>
