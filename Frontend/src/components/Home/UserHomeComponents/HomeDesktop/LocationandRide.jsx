@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 import { FaArrowLeft, FaChevronRight, FaCircle, FaClock, FaCreditCard, FaLocationArrow, FaSquare, FaUser } from 'react-icons/fa'
 import { IoIosAdd, IoIosArrowDown, IoMdClose, IoMdSearch } from 'react-icons/io'
 
-const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisRiding, Pickup, setPickup, Dropoff, setDropoff, selectVehicle, setselectVehicle, showSuggestions, setshowSuggestions, getFare, Fare }) => {
+const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisRiding, Pickup, setPickup, Dropoff, setDropoff, selectVehicle, setselectVehicle, showSuggestions, setshowSuggestions, getFare, Fare, createRide }) => {
     const [activeInput, setactiveInput] = useState('')
     const searchContainerRef = useRef(null)
 
@@ -74,7 +74,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
     const LocationRideDetails = {
         pickup: Pickup,
         drop: Dropoff,
-        vehicle: selectedVehicle
+        vehicle: selectedVehicle.id
     }
 
     const submitHandler = (e) => {
@@ -82,7 +82,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
         setPickup('')
         setDropoff('')
         setselectVehicle(false)
-        console.log(LocationRideDetails);
+        // console.log(LocationRideDetails);
         setisRiding(true)
     }
 
@@ -155,7 +155,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                                     onFocus={() => {
                                         setactiveInput('dropoff')
                                         setshowSuggestions(prev => ({
-                                            ...prev, 
+                                            ...prev,
                                             showSuggestions: true
                                         }))
                                     }}
@@ -267,9 +267,9 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
                             type='button'
                             onClick={async () => {
                                 await getFare();
-                                setselectVehicle(true)
+                                setselectVehicle(true);
                             }}
-                            className='mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-semibold text-white shadow-lg shadow-slate-900/20 transition-all duration-200 hover:bg-black active:scale-[0.99]'
+                            className='mt-1 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-semibold text-white transition-all duration-200 hover:bg-black active:scale-[0.99]'
                         >
                             <IoMdSearch size={18} />
                             <span>Search rides</span>
@@ -361,7 +361,7 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
 
                                         <div className='text-right shrink-0'>
                                             <span className={`text-base font-extrabold block ${isSelected ? 'text-white' : 'text-slate-900'}`}>
-                                                {Fare ? `₹${Fare[vehicle.id]}`: 'NAN'}
+                                                {Fare ? `₹${Fare[vehicle.id]}` : 'NAN'}
                                             </span>
                                         </div>
                                     </button>
@@ -386,6 +386,10 @@ const LocationandRide = ({ selectedVehicle, setSelectedVehicle, VEHICLES, setisR
 
                             <button
                                 type='submit'
+                                onClick={async () => {
+                                    console.log(selectedVehicle.id);
+                                    await createRide();
+                                }}
                                 className='w-full bg-slate-900 hover:bg-black active:scale-[0.99] text-white font-bold py-3.5 rounded-xl shadow-md hover:shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center gap-2 text-sm sm:text-base'>
                                 <span>Confirm {selectedVehicle.name}</span>
                                 <span>• ₹{Fare?.[selectedVehicle.id]}</span>

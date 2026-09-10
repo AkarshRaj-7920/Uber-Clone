@@ -47,7 +47,6 @@ const UserHome = () => {
   const [selectedVehicle, setSelectedVehicle] = useState(VEHICLES[0]);
   const [DriverFound, setDriverFound] = useState(false);
 
-
   const [Pickup, setPickup] = useState('')
   const [Dropoff, setDropoff] = useState('')
   const [selectVehicle, setselectVehicle] = useState(null)
@@ -77,8 +76,22 @@ const UserHome = () => {
     }
   }
 
-  async function createRide(vehicleType) {
-    
+  async function createRide() {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
+          pickup: Pickup,
+          destination: Dropoff,
+          vehicleType: selectedVehicle.id
+        }, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        })
+
+      console.log('Ride Created: ', response.data);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (
@@ -165,7 +178,7 @@ const UserHome = () => {
       ) : (
         <section className='z-20 flex w-full shrink-0 flex-col px-2 transition-all duration-300 md:w-96 md:py-1 lg:w-105 xl:w-115 overflow-y-auto'>
           {!isRiding ? (
-            <LocationandRide selectedVehicle={selectedVehicle} setSelectedVehicle={setSelectedVehicle} VEHICLES={VEHICLES} isRiding={isRiding} setisRiding={setisRiding} Pickup={Pickup} setPickup={setPickup} Dropoff={Dropoff} setDropoff={setDropoff} selectVehicle={selectVehicle} setselectVehicle={setselectVehicle} showSuggestions={showSuggestions} setshowSuggestions={setshowSuggestions} getFare={getFare} Fare={Fare} />
+            <LocationandRide selectedVehicle={selectedVehicle} setSelectedVehicle={setSelectedVehicle} VEHICLES={VEHICLES} isRiding={isRiding} setisRiding={setisRiding} Pickup={Pickup} setPickup={setPickup} Dropoff={Dropoff} setDropoff={setDropoff} selectVehicle={selectVehicle} setselectVehicle={setselectVehicle} showSuggestions={showSuggestions} setshowSuggestions={setshowSuggestions} getFare={getFare} Fare={Fare} createRide={createRide} />
           ) : (
             <ConfirmLocationandRide isRiding={isRiding} setisRiding={setisRiding} selectedVehicle={selectedVehicle} setSelectedVehicle={setSelectedVehicle} VEHICLES={VEHICLES} />
           )}
