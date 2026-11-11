@@ -45,7 +45,22 @@ A full-stack ride-booking web application inspired by Uber, built using the MERN
 
 ## 📸 Screenshots
 
-<!-- Add project screenshots here -->
+### Cover Page
+![Cover Page](./Screenshots/CoverPg.png)
+
+### User Authentication
+![User Login Page](./Screenshots/UserLogin.png)
+![User SignUp Page](./Screenshots/UserSIgnUp.png)
+
+### Captain Authentication
+![Captain Login Page](./Screenshots/CaptainLogin.png)
+![Captain SignUp Page](./Screenshots/CaptainSignUp.png)
+
+### User Dashboard
+![User Dashboard](./Screenshots/UserHomePg.png)
+
+### Captain Dashboard
+![Captain Dashboard](./Screenshots/CaptainHomePg.png)
 
 ## 🏗️ Project Structure
 
