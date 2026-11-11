@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
+import { CaptainContextData } from '../../../context/CaptainContext'
 import CaptainRidePanel from './CaptainRidePanel';
 import CaptainRideSuggestionPanel from './CaptainRideSuggestionPanel';
+import LibreMap from '../../Map/LibreMap';
 
 const CaptainHome = () => {
   const [isOnline, setisOnline] = useState(
@@ -21,15 +23,12 @@ const CaptainHome = () => {
 
   return (
     <>
+      {/* Map */}
       <section
         ref={mapRef}
         className='relative h-50 md:h-auto w-full px-2 md:w-3/7 md:px-1.5 md:py-1 mt-1 md:mt-0 lg:w-4/7 xl:w-3/5'>
         <div className='h-full w-full overflow-hidden rounded-[15px] border border-slate-200/80 shadow-[0_20px_70px_rgba(15,23,42,0.12)]'>
-          <img
-            src='https://i.sstatic.net/gtiI7.gif'
-            alt='Uber Live Navigation Map'
-            className='h-full w-full object-cover transition-transform duration-700 hover:scale-[1.02]'
-          />
+          <LibreMap />
         </div>
       </section>
 

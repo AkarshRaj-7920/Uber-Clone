@@ -55,7 +55,12 @@ const rideSchema = new mongoose.Schema({
         type: String,
         select: false,
         required: true
-    },    
+    }, 
+
+    vehicle: {
+        type: String,
+        required: true
+    }
 })
 
 module.exports = mongoose.model('ride', rideSchema);

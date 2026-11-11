@@ -45,7 +45,8 @@ module.exports.createRide = async ({
         pickup,
         destination,
         otp: getOtp(4),
-        fare: fare[vehicleType]
+        fare: fare[vehicleType],
+        vehicle: vehicleType
     })
 
     return ride;

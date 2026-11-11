@@ -1,12 +1,18 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useContext } from "react"
 import { MdDirectionsCar, MdTwoWheeler, MdLocalTaxi, MdMessage } from 'react-icons/md'
 import UberMobileTrip from "../../../assets/imgs/UberMobileTrip.png"
 import LocationandRide from './HomeDesktop/LocationandRide'
 import ConfirmLocationandRide from './HomeDesktop/ConfirmLocationandRide'
 import { IoIosCall } from 'react-icons/io'
 import axios from 'axios'
+import { SocketContext } from "../../../context/SocketContext"
+import { ContextData } from "../../../context/Context"
+import LibreMap from "../../Map/LibreMap"
 
 const UserHome = () => {
+  const {user} = useContext(ContextData);
+
   const VEHICLES = [
     {
       id: 'car',
@@ -43,6 +49,7 @@ const UserHome = () => {
     }
   ];
 
+
   const [isRiding, setisRiding] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(VEHICLES[0]);
   const [DriverFound, setDriverFound] = useState(false);
@@ -55,6 +62,14 @@ const UserHome = () => {
     suggestedLocations: []
   });
   const [Fare, setFare] = useState(null)
+
+  const { socket } = useContext(SocketContext);
+
+  useEffect(() => {
+    // console.log(user)
+    socket.emit("join", { userType: "user", userid: user._id })
+  }, [user])
+
 
   async function getFare() {
     try {
@@ -79,14 +94,14 @@ const UserHome = () => {
   async function createRide() {
     try {
       const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/rides/create`, {
-          pickup: Pickup,
-          destination: Dropoff,
-          vehicleType: selectedVehicle.id
-        }, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        })
+        pickup: Pickup,
+        destination: Dropoff,
+        vehicleType: selectedVehicle.id
+      }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      })
 
       console.log('Ride Created: ', response.data);
     } catch (err) {
@@ -188,11 +203,7 @@ const UserHome = () => {
       <section
         className='relative h-50 md:h-auto w-full px-2 md:w-3/7 md:px-1.5 md:py-1 mt-1 md:mt-0 lg:w-4/7 xl:w-3/5'>
         <div className='h-full w-full overflow-hidden rounded-[15px]'>
-          <img
-            src='https://i.sstatic.net/gtiI7.gif'
-            alt='Uber Live Navigation Map'
-            className='h-full w-full object-cover'
-          />
+          <LibreMap />
         </div>
       </section>
     </>

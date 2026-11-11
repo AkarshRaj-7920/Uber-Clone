@@ -1,6 +1,9 @@
-import React from 'react'
+import { useContext } from 'react'
+import { CaptainContextData } from '../../../context/CaptainContext'
 
 const CaptainRideHeader = () => {
+    const { captain } = useContext(CaptainContextData);
+
     return (
         <div className='border-b border-slate-200/80 bg-white px-5 py-3 flex flex-col gap-1'>
             <div className='flex justify-start items-center gap-2'>
@@ -9,7 +12,7 @@ const CaptainRideHeader = () => {
                     alt="Passenger"
                     className="w-7 h-7 md:w-8 md:h-8 rounded-full object-cover ring-2 ring-gray-100"
                 />
-                <h1 className='font-semibold'>Welcome <span>Name</span>!</h1>
+                <h1 className='font-semibold'>Welcome <span>{captain?.fullName?.firstName ?? 'Captain'}!</span></h1>
             </div>
 
             <div className='leading-tight whitespace-nowrap'>

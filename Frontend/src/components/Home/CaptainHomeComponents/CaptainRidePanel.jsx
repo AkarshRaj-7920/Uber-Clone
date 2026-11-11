@@ -4,7 +4,7 @@ import CaptainGoOffline from "./CaptainGoOffline"
 import CaptainRideRequests from "./CaptainRideRequests"
 import CaptainSummary from "./CaptainSummary"
 
-const CaptainRidePanel = ({ isOnline, setisOnline, goOnline, goOffline }) => {
+const CaptainRidePanel = ({ isOnline, setisOnline, goOnline, goOffline, captainName }) => {
     return (
         <div className='flex flex-col overflow-hidden rounded-[28px] border border-slate-200/80 bg-white/90 shadow-[0_20px_70px_rgba(15,23,42,0.12)] backdrop-blur-xl'>
             {!isOnline && (
